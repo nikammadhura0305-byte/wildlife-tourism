@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>National Park & Wildlife Tourism Dashboard</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css">
+
+</head>
+
+<body>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <div class="logo">
+            <i class="fa-solid fa-paw"></i>
+            <h2>Wildlife Tourism</h2>
+            <p>INDIA</p>
+        </div>
+
+        <nav>
+            <a href="#dashboard" class="active" data-section="dashboard" aria-current="page">
+                <i class="fa-solid fa-house"></i> Dashboard
+            </a>
+
+            <a href="#parks" data-section="parks">
+                <i class="fa-solid fa-tree"></i> Parks & Map
+            </a>
+
+            <a href="#bookings" data-section="bookings">
+                <i class="fa-solid fa-calendar-days"></i> Bookings
+            </a>
+
+            <a href="#sightings" data-section="sightings">
+                <i class="fa-solid fa-paw"></i> Sightings
+            </a>
+
+            <a href="#revenue" data-section="revenue">
+                <i class="fa-solid fa-indian-rupee-sign"></i> Revenue
+            </a>
+
+            <a href="#reports" data-section="reports">
+                <i class="fa-solid fa-chart-column"></i> Reports
+            </a>
+
+            <a href="#settings" data-section="settings">
+                <i class="fa-solid fa-gear"></i> Settings
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <p>Explore Nature...</p>
+            <p>Support Conservation 🌿</p>
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+        <!-- HEADER -->
+        <header class="header">
+
+            <div class="header-title">
+
+                <div class="leaf-icon">
+                    <i class="fa-solid fa-leaf"></i>
+                </div>
+
+                <div>
+                    <h1>National Park & Wildlife Tourism Dashboard</h1>
+                    <p>Discover • Explore • Preserve</p>
+                </div>
+
+            </div>
+
+            <div class="header-actions">
+
+                <select id="monthFilter">
+                    <option value="all">All Available Months</option>
+                </select>
+
+                <button class="profile-btn" aria-label="Profile">
+                    <i class="fa-solid fa-user"></i>
+                </button>
+
+            </div>
+
+        </header>
+
+        <section class="page-view active" id="dashboard" aria-label="Dashboard">
+
+        <!-- KPI SECTION -->
+        <section class="kpi-section">
+
+            <!-- VISITORS -->
+            <div class="kpi-card visitors-card">
+
+                <div class="kpi-icon">
+                    <i class="fa-solid fa-tree"></i>
+                </div>
+
+                <div class="kpi-details">
+                    <h3>Park-wise Visitors</h3>
+                    <h2 id="visitorsKpi">—</h2>
+                    <p>Based on dataset</p>
+                </div>
+
+            </div>
+
+
+            <!-- BOOKINGS -->
+            <div class="kpi-card bookings-card">
+
+                <div class="kpi-icon">
+                    <i class="fa-solid fa-calendar-days"></i>
+                </div>
+
+                <div class="kpi-details">
+                    <h3>Safari Bookings</h3>
+                    <h2 id="bookingsKpi">—</h2>
+                    <p>Based on dataset</p>
+                </div>
+
+            </div>
+
+
+            <!-- SIGHTINGS -->
+            <div class="kpi-card sightings-card">
+
+                <div class="kpi-icon">
+                    <i class="fa-solid fa-binoculars"></i>
+                </div>
+
+                <div class="kpi-details">
+                    <h3>Animal Sightings</h3>
+                    <h2 id="sightingsKpi">—</h2>
+                    <p>Based on dataset</p>
+                </div>
+
+            </div>
+
+
+            <!-- REVENUE -->
+            <div class="kpi-card revenue-card">
+
+                <div class="kpi-icon">
+                    <i class="fa-solid fa-indian-rupee-sign"></i>
+                </div>
+
+                <div class="kpi-details">
+                    <h3>Tourism Revenue</h3>
+                    <h2 id="revenueKpi">—</h2>
+                    <p>Based on dataset</p>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- MIDDLE SECTION -->
+        <section class="middle-section">
+
+            <!-- VISITORS TREND -->
+            <div class="dashboard-card visitors-trend">
+
+                <h2>
+                    <i class="fa-solid fa-chart-line"></i>
+                    Visitors Trend
+                </h2>
+
+                <div class="chart-container">
+                    <canvas id="visitorsChart"></canvas>
+                </div>
+
+            </div>
+
+
+            <!-- PARK-WISE VISITORS -->
+            <div class="dashboard-card park-dashboard" id="dashboard-parks">
+
+                <span id="map" aria-hidden="true"></span>
+                <h2>
+                    <i class="fa-solid fa-location-dot"></i>
+                    Park-wise Visitors
+                </h2>
+
+                <div id="parkList" class="park-list">
+
+                    <p class="hint">Waiting for real dataset...</p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- BOTTOM CHARTS -->
+        <section class="bottom-section">
+
+            <!-- ANIMAL SIGHTINGS -->
+            <div class="dashboard-card" id="dashboard-sightings">
+
+                <h2>
+                    <i class="fa-solid fa-paw"></i>
+                    Animal Sightings
+                </h2>
+
+                <div class="chart-container">
+                    <canvas id="sightingsChart"></canvas>
+                </div>
+
+            </div>
+
+
+            <!-- SAFARI BOOKINGS -->
+            <div class="dashboard-card" id="dashboard-bookings">
+
+                <h2>
+                    <i class="fa-solid fa-ticket"></i>
+                    Safari Bookings
+                </h2>
+
+                <div class="chart-container">
+                    <canvas id="bookingsChart"></canvas>
+                </div>
+
+            </div>
+
+
+            <!-- TOURISM REVENUE -->
+            <div class="dashboard-card" id="dashboard-revenue">
+
+                <h2>
+                    <i class="fa-solid fa-indian-rupee-sign"></i>
+                    Tourism Revenue
+                </h2>
+
+                <div class="chart-container">
+                    <canvas id="revenueChart"></canvas>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- WILDLIFE IMAGE GALLERY -->
+        <section class="wildlife-gallery">
+
+            <div class="gallery-heading">
+                <h2>
+                    <i class="fa-solid fa-leaf"></i>
+                    Explore Indian Wildlife
+                </h2>
+
+                <p>Discover • Explore • Protect Wildlife</p>
+            </div>
+
+
+            <div class="animal-grid">
+
+                <!-- TIGER -->
+                <div class="animal-card">
+
+                    <img src="./assets/tiger.jpg"
+                         alt="Bengal Tiger">
+
+                    <div class="animal-info">
+                        <h3>Bengal Tiger</h3>
+                        <p>Royal Wildlife of India</p>
+                    </div>
+
+                </div>
+
+
+                <!-- ELEPHANT -->
+                <div class="animal-card">
+
+                    <img src="./assets/elephant.jpg"
+                         alt="Indian Elephant">
+
+                    <div class="animal-info">
+                        <h3>Indian Elephant</h3>
+                        <p>Gentle Giant of Forest</p>
+                    </div>
+
+                </div>
+
+
+                <!-- LEOPARD -->
+                <div class="animal-card">
+
+                    <img src="./assets/leopard.jpg"
+                         alt="Indian Leopard">
+
+                    <div class="animal-info">
+                        <h3>Indian Leopard</h3>
+                        <p>Master of Camouflage</p>
+                    </div>
+
+                </div>
+
+
+                <!-- DEER -->
+                <div class="animal-card">
+
+                    <img src="./assets/deer.jpg"
+                         alt="Spotted Deer">
+
+                    <div class="animal-info">
+                        <h3>Spotted Deer</h3>
+                        <p>Beauty of Indian Forests</p>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        </section>
+
+        <section class="page-view" id="parks" aria-labelledby="parksTitle">
+            <div class="page-heading">
+                <div>
+                    <p class="page-eyebrow">EXPLORE INDIA</p>
+                    <h1 id="parksTitle">Parks & Wildlife Map</h1>
+                    <p>Explore protected areas, state locations and wildlife highlights.</p>
+                </div>
+                <i class="fa-solid fa-map-location-dot"></i>
+            </div>
+            <div class="page-toolbar dashboard-card">
+                <div>
+                    <h2>Interactive India map</h2>
+                    <p class="page-note">Select a marker to see park details. Tourism CSV data does not contain park-specific visitor counts.</p>
+                </div>
+                <div class="page-filters">
+                    <label>State<select id="parkStateFilter"><option value="all">All states</option></select></label>
+                    <label>Park type<select id="parkTypeFilter"><option value="all">All protected areas</option><option value="National Park">National parks</option><option value="Tiger Reserve">Tiger reserves</option></select></label>
+                    <label>Search parks<input id="parkSearch" type="search" placeholder="Park name or species"></label>
+                </div>
+            </div>
+            <div id="indiaMap" class="india-map" role="application" aria-label="Interactive India wildlife destinations map"></div>
+            <div class="page-section-heading"><h2>Featured parks & reserves</h2><span id="parkResultCount"></span></div>
+            <div id="parkCards" class="page-card-grid"></div>
+        </section>
+
+        <section class="page-view" id="bookings" aria-labelledby="bookingsTitle">
+            <div class="page-heading">
+                <div>
+                    <p class="page-eyebrow">STATE-WISE TOURISM ESTIMATES</p>
+                    <h1 id="bookingsTitle">Bookings overview</h1>
+                    <p>Annual booking estimates from the supplied 2024 tourism sample.</p>
+                </div>
+                <i class="fa-solid fa-ticket"></i>
+            </div>
+            <div class="page-notice"><i class="fa-solid fa-circle-info"></i><p>The CSV field is <strong>Estimated_Bookings</strong>, a general tourism estimate; it is not necessarily a safari booking count.</p></div>
+            <div class="page-kpi-grid">
+                <article class="kpi-card bookings-card"><div class="kpi-icon"><i class="fa-solid fa-ticket"></i></div><div><h3>Total Estimated Bookings</h3><h2 id="bookingsTotal">—</h2><p>2024 annual sample</p></div></article>
+                <article class="kpi-card visitors-card"><div class="kpi-icon"><i class="fa-solid fa-map"></i></div><div><h3>States & UTs</h3><h2 id="bookingStateCount">—</h2><p>Available annual records</p></div></article>
+                <article class="kpi-card sightings-card"><div class="kpi-icon"><i class="fa-solid fa-star"></i></div><div><h3>Top State</h3><h2 id="bookingTopState">—</h2><p id="bookingTopValue">Estimated booking leader</p></div></article>
+            </div>
+            <div class="dashboard-card page-panel">
+                <div class="page-toolbar-heading"><div><h2>State-wise booking estimates</h2><p class="page-note">Ranking uses the available estimated booking field.</p></div><div class="page-filters">
+                    <label>Region<select id="bookingRegionFilter"><option value="all">All regions</option></select></label>
+                    <label>Search<input id="bookingSearch" type="search" placeholder="State or destination"></label>
+                </div></div>
+                <div class="page-chart"><canvas id="bookingsDetailChart" aria-label="Estimated tourism bookings by state"></canvas></div>
+                <div class="page-table-wrap"><table><thead><tr><th>State / UT</th><th>Region</th><th>Popular destination</th><th>Estimated bookings</th></tr></thead><tbody id="bookingTableBody"></tbody></table></div>
+            </div>
+        </section>
+
+        <section class="page-view" id="sightings" aria-labelledby="sightingsTitle">
+            <div class="page-heading">
+                <div>
+                    <p class="page-eyebrow">SYNTHETIC CAMERA-TRAP DEMO</p>
+                    <h1 id="sightingsTitle">Animal Sightings</h1>
+                    <p>Species and observation records from the supplied annotation sample.</p>
+                </div>
+                <i class="fa-solid fa-binoculars"></i>
+            </div>
+            <div class="page-notice"><i class="fa-solid fa-circle-info"></i><p>These 2018 records are synthetic demo annotations, not official wildlife census or sighting records. They are separate from tourism data.</p></div>
+            <div class="page-kpi-grid">
+                <article class="kpi-card sightings-card"><div class="kpi-icon"><i class="fa-solid fa-paw"></i></div><div><h3>Positive Detections</h3><h2 id="sightingTotal">—</h2><p>Animal-present records</p></div></article>
+                <article class="kpi-card visitors-card"><div class="kpi-icon"><i class="fa-solid fa-leaf"></i></div><div><h3>Species Detected</h3><h2 id="sightingSpeciesCount">—</h2><p>Excludes “none” labels</p></div></article>
+                <article class="kpi-card bookings-card"><div class="kpi-icon"><i class="fa-solid fa-camera"></i></div><div><h3>Camera Traps</h3><h2 id="sightingCameraCount">—</h2><p>Unique demo camera IDs</p></div></article>
+            </div>
+            <div class="dashboard-card page-panel">
+                <div class="page-toolbar-heading"><div><h2>Wildlife photographs</h2><p class="page-note">Existing animal images; counts reflect only matching CSV species.</p></div></div>
+                <div id="sightingGallery" class="page-card-grid animal-page-grid"></div>
+            </div>
+            <div class="dashboard-card page-panel">
+                <div class="page-toolbar-heading"><div><h2>Species detection mix</h2><p class="page-note">Positive detections by species in the synthetic sample.</p></div><label class="page-search">Species<select id="sightingSpeciesFilter"><option value="all">All species</option></select></label></div>
+                <div class="page-chart page-doughnut"><canvas id="sightingsDetailChart" aria-label="Wildlife species detections by species"></canvas></div>
+            </div>
+            <div class="dashboard-card page-panel">
+                <div class="page-toolbar-heading"><div><h2>Camera-trap records</h2><p class="page-note">Search observations by species, camera ID or date.</p></div><label class="page-search">Search<input id="sightingSearch" type="search" placeholder="Species, camera or date"></label></div>
+                <div class="page-table-wrap page-table-tall"><table><thead><tr><th>Species</th><th>Animal present</th><th>Camera trap</th><th>Observation date</th><th>Record type</th></tr></thead><tbody id="sightingTableBody"></tbody></table></div>
+            </div>
+        </section>
+
+        <section class="page-view" id="revenue" aria-labelledby="revenueTitle">
+            <div class="page-heading">
+                <div>
+                    <p class="page-eyebrow">TOURISM REVENUE ESTIMATES</p>
+                    <h1 id="revenueTitle">Revenue overview</h1>
+                    <p>Monthly and state-wise tourism revenue from the supplied samples.</p>
+                </div>
+                <i class="fa-solid fa-indian-rupee-sign"></i>
+            </div>
+            <div class="page-toolbar dashboard-card">
+                <div><h2>Reporting period</h2><p class="page-note">2025 monthly data or 2024 annual state estimates.</p></div>
+                <div class="page-filters">
+                    <label>Year<select id="revenueYear"><option value="2025">2025 · Monthly</option><option value="2024">2024 · Annual</option></select></label>
+                    <label>Period<select id="revenuePeriod"><option value="all">All available months</option></select></label>
+                </div>
+            </div>
+            <div class="page-kpi-grid">
+                <article class="kpi-card revenue-card"><div class="kpi-icon"><i class="fa-solid fa-indian-rupee-sign"></i></div><div><h3>Estimated Revenue</h3><h2 id="revenueTotal">—</h2><p>INR crore</p></div></article>
+                <article class="kpi-card visitors-card"><div class="kpi-icon"><i class="fa-solid fa-calendar"></i></div><div><h3>Selected Period</h3><h2 id="revenuePeriodLabel">—</h2><p>Revenue sample period</p></div></article>
+                <article class="kpi-card bookings-card"><div class="kpi-icon"><i class="fa-solid fa-map"></i></div><div><h3>States & UTs</h3><h2 id="revenueStateCount">—</h2><p>With revenue values</p></div></article>
+            </div>
+            <div class="dashboard-card page-panel">
+                <div class="page-toolbar-heading"><div><h2>Revenue trend</h2><p class="page-note">Monthly estimated tourism revenue · INR crore.</p></div></div>
+                <div class="page-chart"><canvas id="revenueDetailChart" aria-label="Monthly estimated tourism revenue line chart"></canvas></div>
+            </div>
+            <div class="dashboard-card page-panel">
+                <div class="page-toolbar-heading"><div><h2>State-wise revenue</h2><p class="page-note">Sorted by estimated tourism revenue.</p></div><label class="page-search">Search<input id="revenueSearch" type="search" placeholder="State or region"></label></div>
+                <div class="page-table-wrap page-table-tall"><table><thead><tr><th>State / UT</th><th>Region</th><th>Tourism revenue (INR crore)</th></tr></thead><tbody id="revenueTableBody"></tbody></table></div>
+            </div>
+        </section>
+
+        <section class="page-view" id="reports" aria-labelledby="reportsTitle">
+            <div class="page-heading">
+                <div>
+                    <p class="page-eyebrow">DATA & EXPORTS</p>
+                    <h1 id="reportsTitle">Reports</h1>
+                    <p>Summaries and downloads from the local sample datasets.</p>
+                </div>
+                <i class="fa-solid fa-chart-column"></i>
+            </div>
+            <div class="page-notice"><i class="fa-solid fa-circle-info"></i><p>Tourism CSV data is sample/synthetic; wildlife camera-trap annotations are synthetic demo data.</p></div>
+            <div class="page-kpi-grid">
+                <article class="kpi-card visitors-card"><div class="kpi-icon"><i class="fa-solid fa-users"></i></div><div><h3>Tourism Rows</h3><h2 id="reportTourismRows">—</h2><p>Monthly + annual samples</p></div></article>
+                <article class="kpi-card sightings-card"><div class="kpi-icon"><i class="fa-solid fa-paw"></i></div><div><h3>Wildlife Annotations</h3><h2 id="reportWildlifeRows">—</h2><p>Synthetic demo rows</p></div></article>
+                <article class="kpi-card revenue-card"><div class="kpi-icon"><i class="fa-solid fa-location-dot"></i></div><div><h3>States / UTs</h3><h2 id="reportStateCount">—</h2><p>Tourism annual sample</p></div></article>
+            </div>
+            <div class="page-card-grid report-card-grid">
+                <article class="dashboard-card report-action-card"><i class="fa-solid fa-file-csv"></i><h2>Annual tourism CSV</h2><p>2024 state tourism and booking estimates.</p><button class="report-button" id="downloadAnnual">Download annual CSV</button></article>
+                <article class="dashboard-card report-action-card"><i class="fa-solid fa-file-csv"></i><h2>Monthly tourism CSV</h2><p>2025 monthly tourism sample by state and destination.</p><button class="report-button" id="downloadMonthly">Download monthly CSV</button></article>
+                <article class="dashboard-card report-action-card"><i class="fa-solid fa-camera"></i><h2>Wildlife annotations CSV</h2><p>Synthetic camera-trap annotation sample.</p><button class="report-button" id="downloadWildlife">Download wildlife CSV</button></article>
+                <article class="dashboard-card report-action-card"><i class="fa-solid fa-file-export"></i><h2>Dashboard report</h2><p>Export a data-backed summary of available sample metrics.</p><button class="report-button" id="exportReport">Export report CSV</button></article>
+                <article class="dashboard-card report-action-card"><i class="fa-solid fa-print"></i><h2>Print report</h2><p>Print or save the active report page as PDF.</p><button class="report-button" id="printReport">Print report</button></article>
+            </div>
+        </section>
+
+        <section class="page-view" id="settings" aria-labelledby="settingsTitle">
+            <div class="page-heading">
+                <div>
+                    <p class="page-eyebrow">PREFERENCES</p>
+                    <h1 id="settingsTitle">Settings</h1>
+                    <p>Adjust reporting period and display density for this browser.</p>
+                </div>
+                <i class="fa-solid fa-gear"></i>
+            </div>
+            <div class="dashboard-card settings-panel">
+                <h2>Dashboard preferences</h2>
+                <p class="page-note">Your selected display options are saved locally in this browser.</p>
+                <div class="settings-grid">
+                    <label>Year<select id="settingsYear"><option value="2025">2025 · Monthly tourism sample</option><option value="2024">2024 · Annual tourism sample</option></select></label>
+                    <label>Date / period<select id="settingsPeriod"><option value="all">All available months</option></select></label>
+                    <label>Theme<select id="settingsTheme"><option value="forest">Forest (default)</option><option value="light">Light neutral</option><option value="night">Night forest</option></select></label>
+                    <label>Display density<select id="settingsDensity"><option value="comfortable">Comfortable</option><option value="compact">Compact</option></select></label>
+                </div>
+                <div class="settings-actions"><button class="report-button" id="applySettings">Apply Settings</button><button class="report-button secondary" id="resetSettings">Reset Settings</button><span id="settingsFeedback" role="status" aria-live="polite"></span></div>
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer class="footer">
+
+            <p id="status">
+                Waiting for dataset connection...
+            </p>
+
+            <p>
+                © 2026 Wildlife Tourism India |
+                Discover Nature • Support Conservation
+            </p>
+
+        </footer>
+
+    </main>
+
+
+    <!-- JAVASCRIPT -->
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="script.js"></script>
+
+</body>
+</html>
